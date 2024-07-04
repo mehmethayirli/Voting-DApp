@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import Login from "./Components/Login";
+import Connected from "./Components/Connected";
+
 import "./App.css";
 
 function App() {
@@ -29,7 +31,11 @@ function App() {
 
   return (
     <div className="App">
-      <Login connectWallet={connectToMetamask} />
+      {isConnected ? (
+        <Connected account={account} />
+      ) : (
+        <Login connectWallet={connectToMetamask} />
+      )}
     </div>
   );
 }
