@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Login from "./Components/Login";
 import Connected from "./Components/Connected";
@@ -9,6 +9,28 @@ function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+    }
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener(
+          "accountsChanged",
+          handleAccountsChanged
+        );
+      }
+    };
+  });
+  function handleAccountsChanged(accounts) {
+    if (accounts.length > 0 && account !== account[0]) {
+      setAccount(account[0]);
+    } else {
+      setIsConnected(false);
+      setAccount(null);
+    }
+  }
 
   async function connectToMetamask() {
     if (window.ethereum) {
